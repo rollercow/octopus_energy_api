@@ -32,6 +32,16 @@ class urls:
         return url
 
     @classmethod
+    def meter_discovery_url(cls, mpan, serial, order_by="period"):
+
+        setup = f"/v1/electricity-meter-points/{mpan}/meters/{serial}/consumption/"
+        params = f"?page_size=1&order_by={order_by}"
+
+        url = cls.build_url(setup, params=params)
+
+        return url
+
+    @classmethod
     def meter_point_url(cls, mpan):
 
         setup = f"/v1/electricity-meter-points/{mpan}/"

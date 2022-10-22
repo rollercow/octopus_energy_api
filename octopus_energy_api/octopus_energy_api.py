@@ -1,6 +1,7 @@
 from octopus_energy_api.api_interface import api
 from octopus_energy_api.account import account
 from octopus_energy_api.urls import urls
+from octopus_energy_api.urls import meter_point
 
 from datetime import datetime
 import statistics
@@ -17,6 +18,14 @@ class oe_api:
         account_url = self._urls.accounts_url(account_number)
         account_details = self._api.run(account_url)
         self.account = account(account_details)
+        self.properties = []
+        for property in self.account.properties:
+            meters_points = []
+            for meter_point in property['electricity_meter_points']:
+                mp = meter_point(self._urls, self._api, meter_point)
+                meters.append(mp)
+            self.properties.append(meters_points)
+                
 
     def account_details(self):
         """See account data"""
