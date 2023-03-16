@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "octopus-energy-api"
-version = "0.8.1"
+version = "0.8.2a0"
 description = "Wrapper for communicating with the Octopus Energy API"
 authors = ["Euan Campbell <dev@euan.app>","Chris Jones <chris@brasskipper.org.uk>"]
 license = "MIT"

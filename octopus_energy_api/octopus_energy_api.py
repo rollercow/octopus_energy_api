@@ -19,11 +19,16 @@ class oe_api:
         self.account = account(account_details)
         self.properties = []
         for property in self.account.properties:
+            p = {}
             meters_points = []
+            for k, v in property.items():
+                if "meter_points" not in k:
+                    print(k)
             for elec_meter_point in property["electricity_meter_points"]:
-                mp = meter_point(self._urls, self._api, elec_meter_point)
+                mp = meter_point(self, elec_meter_point)
                 meters_points.append(mp)
-            self.properties.append(meters_points)
+            p["meters"] = meters_points
+            self.properties.append(p)
 
     def account_details(self):
         """See account data"""
@@ -33,6 +38,16 @@ class oe_api:
         response = self._api.run(url)
 
         return response
+
+    def discover_meter(self, meter):
+
+        url = self._urls.meter_discovery_url(meter.mpan, meter.serial_number)
+        start = self._api.run(url)
+
+        url = self._urls.meter_discovery_url(meter.mpan, meter.serial_number, "-period")
+        end = self._api.run(url)
+
+        return [start, end]
 
     def products(self):
         """Get all product info for Octopus Energy"""
@@ -47,6 +62,13 @@ class oe_api:
         format_tz = "%Y-%m-%dT%H:%M:%S%z"
 
         return time.strftime(format_tz)
+
+    @classmethod
+    def convert_to_datetime(cls, time):
+
+        format_tz = "%Y-%m-%dT%H:%M:%S%z"
+
+        return datetime.strptime(time, format_tz)
 
     def consumption(self, start: datetime, end: datetime):
         """Get all consumption data between 2 datetimes"""
