@@ -42,12 +42,13 @@ class oe_api:
     def discover_meter(self, meter):
 
         url = self._urls.meter_discovery_url(meter.mpan, meter.serial_number)
-        start = self._api.run(url)
+        start = self._api.run(url)["results"][0]["interval_start"]
 
         url = self._urls.meter_discovery_url(meter.mpan, meter.serial_number, "-period")
-        end = self._api.run(url)
-
-        return [start, end]
+        foo = self._api.run(url)
+        end = foo["results"][0]["interval_end"]
+        count = foo["count"]
+        return [start, end, count]
 
     def products(self):
         """Get all product info for Octopus Energy"""
