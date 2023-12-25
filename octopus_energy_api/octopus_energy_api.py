@@ -40,10 +40,11 @@ class oe_api:
         return response
 
     def discover_meter(self, meter):
-
         url = self._urls.meter_discovery_url(meter.mpan, meter.serial_number)
-        start = self._api.run(url)["results"][0]["interval_start"]
-
+        answer = self._api.run(url)["results"]
+        if len(answer) == 0:
+            return False
+        start = answer[0]["interval_start"]
         url = self._urls.meter_discovery_url(meter.mpan, meter.serial_number, "-period")
         foo = self._api.run(url)
         end = foo["results"][0]["interval_end"]

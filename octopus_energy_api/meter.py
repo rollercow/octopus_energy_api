@@ -5,21 +5,28 @@ class meter:
         self.meter_data = meter_data
         for k, v in meter_data.items():
             setattr(self, k, v)
-        foo = self._api.discover_meter(self)
-        self.start = foo[0]
-        self.end = foo[1]
-        self.count = foo[2]
+        data = self._api.discover_meter(self)
+        if data:
+            self.data = True
+            self.start = data[0]
+            self.end = data[1]
+            self.count = data[2]
+        else:
+            self.data = False
 
     def __str__(self):
-        return (
-            "MPAN: "
-            + self.mpan
-            + " / Serial: "
-            + self.serial_number
-            + " / DataPoints: "
-            + str(self.count)
-            + " / From: "
-            + self.start
-            + " / End: "
-            + self.end
-        )
+        if self.data:
+            return (
+                "MPAN: "
+                + self.mpan
+                + " / Serial: "
+                + self.serial_number
+                + " / DataPoints: "
+                + str(self.count)
+                + " / From: "
+                + self.start
+                + " / End: "
+                + self.end
+            )
+        else:
+            return "MPAN: " + self.mpan + " / Serial: " + self.serial_number
