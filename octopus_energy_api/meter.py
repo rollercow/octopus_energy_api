@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import pandas as pd
 
 
@@ -38,8 +38,8 @@ class meter:
 
     def consumption(self, start: datetime, end: datetime):
         """Get all consumption data between 2 datetimes"""
-        start = start.isoformat().replace("+00:00", "Z")
-        end = end.isoformat().replace("+00:00", "Z")
+        start = start.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+        end = end.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
 
         url = self._api._urls().consumption_url(self.mpan, self.serial_number, start, end)
 
