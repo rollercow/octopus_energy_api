@@ -24,7 +24,7 @@ class urls:
     @classmethod
     def consumption_url(cls, mpan, serial, start, end, page_size=25000):
 
-        setup = f"/v1/electricity-meter-points/{mpan}/meters/{serial}/consumption"
+        setup = f"/v1/electricity-meter-points/{mpan}/meters/{serial}/consumption/"
         params = f"?page_size={page_size}&period_from={start}&period_to={end}&order_by=period"
 
         url = cls.build_url(setup, params=params)

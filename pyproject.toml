@@ -11,6 +11,7 @@ packages = [{include = "octopus_energy_api"}]
 python = "^3.11"
 requests = "^2.28.2"
 pytest-mock = "^3.6.1"
+pandas = "^2.1.4"
 
 [build-system]
 requires = ["poetry-core"]
