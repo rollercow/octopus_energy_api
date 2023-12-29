@@ -15,10 +15,17 @@ class urls:
         return url
 
     @classmethod
-    def products_url(cls):
+    def products_url(cls, productCode: str):
+        setup = f"/v1/products/{productCode}"
 
-        url = cls.build_url("/v1/products/?brand=OCTOPUS_ENERGY")
+        url = cls.build_url(setup)
 
+        return url
+
+    @classmethod
+    def tariff_url(cls, productCode: str, tariffCode: str):
+        setup = f"/v1/products/{productCode}/electricity-tariffs/{tariffCode}/standard-unit-rates/"
+        url = cls.build_url(setup)
         return url
 
     @classmethod

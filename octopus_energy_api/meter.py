@@ -1,6 +1,4 @@
 from datetime import datetime, timezone
-import pandas as pd
-import time
 
 
 class meter:
@@ -42,19 +40,4 @@ class meter:
         start = start.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
         end = end.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
         url = self._api._urls().consumption_url(self.mpan, self.serial_number, start, end)
-        return self._consumptionFetcher(url)
-
-    def _consumptionFetcher(self, url):
-        """Recursive function to fetch all pages of consumption"""
-        response = self._api._api.run(url)
-        if "results" in response:
-            results = pd.DataFrame(response["results"])
-        else:
-            raise Exception(response)
-        if response["next"]:
-            # be kind to the API
-            time.sleep(5)
-            nextResults = self._consumptionFetcher(response["next"])
-            return pd.concat([results, nextResults], ignore_index=True)
-        else:
-            return results
+        return self._api._api.pageFetcher(url)
