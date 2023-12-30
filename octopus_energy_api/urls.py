@@ -23,9 +23,10 @@ class urls:
         return url
 
     @classmethod
-    def tariff_url(cls, productCode: str, tariffCode: str):
+    def tariff_url(cls, productCode: str, tariffCode: str, start, end, page_size=1500):
         setup = f"/v1/products/{productCode}/electricity-tariffs/{tariffCode}/standard-unit-rates/"
-        url = cls.build_url(setup)
+        params = f"?page_size={page_size}&period_from={start}&period_to={end}&order_by=period"
+        url = cls.build_url(setup, params=params)
         return url
 
     @classmethod
