@@ -15,16 +15,24 @@ class urls:
         return url
 
     @classmethod
-    def products_url(cls):
+    def products_url(cls, productCode: str):
+        setup = f"/v1/products/{productCode}"
 
-        url = cls.build_url("/v1/products/?brand=OCTOPUS_ENERGY")
+        url = cls.build_url(setup)
 
+        return url
+
+    @classmethod
+    def tariff_url(cls, productCode: str, tariffCode: str, start, end, page_size=1500):
+        setup = f"/v1/products/{productCode}/electricity-tariffs/{tariffCode}/standard-unit-rates/"
+        params = f"?page_size={page_size}&period_from={start}&period_to={end}&order_by=period"
+        url = cls.build_url(setup, params=params)
         return url
 
     @classmethod
     def consumption_url(cls, mpan, serial, start, end, page_size=25000):
 
-        setup = f"/v1/electricity-meter-points/{mpan}/meters/{serial}/consumption"
+        setup = f"/v1/electricity-meter-points/{mpan}/meters/{serial}/consumption/"
         params = f"?page_size={page_size}&period_from={start}&period_to={end}&order_by=period"
 
         url = cls.build_url(setup, params=params)
