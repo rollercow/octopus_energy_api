@@ -43,7 +43,7 @@ class urls:
     def meter_discovery_url(cls, mpan, serial, order_by="period"):
 
         setup = f"/v1/electricity-meter-points/{mpan}/meters/{serial}/consumption/"
-        params = f"?page_size=1&order_by={order_by}"
+        params = f"?period_from=2015-08-01T00:00:00Z&page_size=1&order_by={order_by}"
 
         url = cls.build_url(setup, params=params)
 
