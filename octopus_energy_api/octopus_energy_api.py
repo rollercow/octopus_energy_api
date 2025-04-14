@@ -1,8 +1,7 @@
 from octopus_energy_api.api_interface import api
 from octopus_energy_api.account import account
 from octopus_energy_api.urls import urls
-from octopus_energy_api.urls import meter_point
-
+from octopus_energy_api.meter_point import meter_point
 from datetime import datetime
 import statistics
 
@@ -20,12 +19,16 @@ class oe_api:
         self.account = account(account_details)
         self.properties = []
         for property in self.account.properties:
+            p = {}
             meters_points = []
-            for meter_point in property['electricity_meter_points']:
-                mp = meter_point(self._urls, self._api, meter_point)
-                meters.append(mp)
-            self.properties.append(meters_points)
-                
+            for k, v in property.items():
+                if "meter_points" not in k:
+                    print(k)
+            for elec_meter_point in property["electricity_meter_points"]:
+                mp = meter_point(self, elec_meter_point)
+                meters_points.append(mp)
+            p["meters"] = meters_points
+            self.properties.append(p)
 
     def account_details(self):
         """See account data"""
@@ -35,6 +38,18 @@ class oe_api:
         response = self._api.run(url)
 
         return response
+
+    def discover_meter(self, meter):
+        url = self._urls.meter_discovery_url(meter.mpan, meter.serial_number)
+        answer = self._api.run(url)["results"]
+        if len(answer) == 0:
+            return False
+        start = answer[0]["interval_start"]
+        url = self._urls.meter_discovery_url(meter.mpan, meter.serial_number, "-period")
+        foo = self._api.run(url)
+        end = foo["results"][0]["interval_end"]
+        count = foo["count"]
+        return [start, end, count]
 
     def products(self):
         """Get all product info for Octopus Energy"""
@@ -49,6 +64,13 @@ class oe_api:
         format_tz = "%Y-%m-%dT%H:%M:%S%z"
 
         return time.strftime(format_tz)
+
+    @classmethod
+    def convert_to_datetime(cls, time):
+
+        format_tz = "%Y-%m-%dT%H:%M:%S%z"
+
+        return datetime.strptime(time, format_tz)
 
     def consumption(self, start: datetime, end: datetime):
         """Get all consumption data between 2 datetimes"""

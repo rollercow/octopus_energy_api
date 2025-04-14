@@ -5,10 +5,10 @@ class account:
             setattr(self, k, v)
 
         # setting additional values
-        #self.mpan = self.properties[0]["electricity_meter_points"][-1]["mpan"]
-        #self.serial_number = self.properties[0]["electricity_meter_points"][-1]["meters"][-1][
+        # self.mpan = self.properties[0]["electricity_meter_points"][-1]["mpan"]
+        # self.serial_number = self.properties[0]["electricity_meter_points"][-1]["meters"][-1][
         #    "serial_number"
-        #]
+        # ]
 
     def all_account_data(self):
 
